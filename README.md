@@ -3,6 +3,7 @@
 ## Table of contents
 * [General info](#general-info)
 * [Setup](#setup)
+* [Input Format](#input-format)
 * [TODO](#todo)
 
 ## General info
@@ -29,6 +30,26 @@ The next inputs are:
 The number you want to break down.
 The maximum value of the sum's element (must be a prime number).
 
+## Input Format
+The program expects input in the following format:
+```cpp
+<ilelini>
+<liczba1> <maks1>
+<liczba2> <maks2>
+...
+```
+- `<ilelini>` represents the number of input lines.
+- `<liczba>` represents a number to be checked and decomposed into combinations.
+- `<maks>` represents the starting value for finding combinations.
+
+## Output Format
+The program outputs the combinations found for each input line. For example:
+```cpp
+<combination1>
+<combination2>
+...
+```
+Each combination is displayed as a sum of numbers, separated by `+`, followed by a newline character.
 
 ## TODO
 -Translate the code into English.
