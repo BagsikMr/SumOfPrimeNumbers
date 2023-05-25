@@ -8,7 +8,7 @@
 * [TODO](#todo)
 
 ## General info
-The program breaks down the given number into all possible sums of prime numbers. The upper limit of this sum is the second given number. First number of sum is always number given in second argument.<br />
+This code is a C++ program that aims to find combinations of numbers that add up to a given input value. The program utilizes various functions and algorithms to calculate and display these combinations.<br />
 For example:<br />
 Input:<br />
 16 7<br />
