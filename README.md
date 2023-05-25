@@ -4,6 +4,7 @@
 * [General info](#general-info)
 * [Setup](#setup)
 * [Input Format](#input-format)
+* [Output Format](#output-format)
 * [TODO](#todo)
 
 ## General info
@@ -22,13 +23,7 @@ Output:<br />
 (Yea, the entire code is written in Polish...)
 	<br />
 ## Setup
-Just run sln.
-
-The first input is the number of tests you want to run.
-
-The next inputs are:
-The number you want to break down.
-The maximum value of the sum's element (must be a prime number).
+Just run sln and follow [Input Format](#input-format).
 
 ## Input Format
 The program expects input in the following format:
