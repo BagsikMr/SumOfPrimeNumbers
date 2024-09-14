@@ -48,3 +48,4 @@ Each combination is displayed as a sum of numbers, separated by `+`, followed by
 
 ## TODO
 -Translate the code into English.
+-Change new and delete to smart pointers.
