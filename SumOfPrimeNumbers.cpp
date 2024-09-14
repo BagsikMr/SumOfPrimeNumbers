@@ -1,8 +1,10 @@
 #include <iostream>
+#include <memory>
+#include <algorithm>
 
 using namespace std;
 
-const int MAX_ARRAY_SIZE_FOR_BYTE = 128;
+const int MAX_ARRAY_SIZE = 128;
 const int FIRST_PRIME_NUMBER = 2;
 
 bool CanBeDecomposed(int numberToCheck, int component, int* pns);
@@ -23,7 +25,7 @@ int main()
         cin >> number;
         cout << "Enter the maximum prime number\n";
         cin >> max;
-        if (IsPrimeNumber(max) == true)
+        if (IsPrimeNumber(max))
         {
             if (number == max)
             {
@@ -41,17 +43,17 @@ int main()
 bool CanBeDecomposed(int numberToCheck, int component, int* pns) //pns - pojemnik na componenti
 {
     int ite = 0;
-    int tempspr = numberToCheck;
-    tempspr -= component;
+    int tempCheck = numberToCheck;
+    tempCheck -= component;
     while (true)
     {
-        tempspr -= pns[ite];
+        tempCheck -= pns[ite];
         ite++;
-        if (tempspr == 0)
+        if (tempCheck == 0)
         {
             return true;
         }
-        if (tempspr < 0)
+        if (tempCheck < 0)
         {
             return false;
         }
@@ -59,27 +61,22 @@ bool CanBeDecomposed(int numberToCheck, int component, int* pns) //pns - pojemni
 }
 bool IsPrimeNumber(int a)
 {
-    int ldz = 0;
-    for (int i = a; i > 0; i--)
+    if (a < 2) return false;
+    for (int i = 2; i*i <= a; i++)
     {
         if (a % i == 0)
         {
-            ldz++;
+            return false;
         }
     }
-    if (ldz == 2)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+
+    return true;
+
 }
 int NextPrimeNumber(int a)
 {
     a++;
-    while (IsPrimeNumber(a) == false)
+    while (!IsPrimeNumber(a))
     {
         a++;
     }
@@ -87,31 +84,19 @@ int NextPrimeNumber(int a)
 }
 void FillWithTwos(int* array, int numberOfCells, int startFrom)
 {
-    for (int a = startFrom; a < numberOfCells + 1; a++)
-    {
-        array[a] = 2;
-    }
+    std::fill(array + startFrom, array + numberOfCells + 1, 2);
 }
 bool AllEqual(int* array, int numberOfCells, int startFrom)
 {
-    int porownanie;
-    bool wystapienie = false;
-    porownanie = array[startFrom];
-    for (int a = startFrom; a < numberOfCells; a++)
+    int comparasionValue = array[startFrom];
+    for (int i = startFrom; i < numberOfCells; i++)
     {
-        if (porownanie != array[a])
+        if (comparasionValue != array[i])
         {
-            wystapienie = true;
+            return false;
         }
     }
-    if (wystapienie == true) // jeœli pojawi³a siê przynajmniej jedna inna liczba to zwracam false
-    {
-        return false;
-    }
-    else // jeœli nie to true
-    {
-        return true;
-    }
+    return true;
 }
 void NumberOfCells(int* array, int* numberOfCells, int* value)
 {
@@ -121,65 +106,64 @@ void NumberOfCells(int* array, int* numberOfCells, int* value)
         *value -= array[temp++];
         if (*value > 0)
         {
-            temp++;
             (*numberOfCells)++;
         }
+        temp++;
     }
 }
 void Decompose(int numberToCheck, int component)
 {
-    int* pojemniknaskladowe; //do przechowywania zmiennych
-    int numberOfCells = 0, ite = 0, tempspr, tempsprpjs, iteratortablicy = 0;
-    bool pierwszyraz = true;
-    pojemniknaskladowe = new int[MAX_ARRAY_SIZE_FOR_BYTE];
+    auto componentContainer = std::make_unique<int[]>(MAX_ARRAY_SIZE);
 
-    for (int a = 0; a < MAX_ARRAY_SIZE_FOR_BYTE; a++)
+    int numberOfCells = 0, iterator = 0, tempCheck, tempCheckPrev, arrayIterator = 0;
+    bool firstTime = true;
+
+    for (int i = 0; i < MAX_ARRAY_SIZE; i++)
     {
-        pojemniknaskladowe[a] = FIRST_PRIME_NUMBER;
+        componentContainer[i] = FIRST_PRIME_NUMBER;
     }
 
-    while (pojemniknaskladowe[0] <= component)
+    while (componentContainer[0] <= component)
     {
         numberOfCells = 0;
-        ite = 0;
-        tempspr = numberToCheck;
-        tempsprpjs = numberToCheck - component;
+        iterator = 0;
+        tempCheck = numberToCheck;
+        tempCheckPrev = numberToCheck - component;
 
-        NumberOfCells(pojemniknaskladowe, &numberOfCells, &tempsprpjs);
+        NumberOfCells(componentContainer.get(), &numberOfCells, &tempCheckPrev);
 
-        if (pierwszyraz == false) //jeœli pierwszy element nie bêdzie zerem to reszta mi potrzebnych te¿ nie,
+        if (!firstTime)
         {
-            if (numberOfCells < iteratortablicy) //zabezpieczenie wyjœcia poza u¿yteczn¹ tablice
+            if (numberOfCells < arrayIterator)
             {
-                iteratortablicy = 0;
+                arrayIterator = 0;
             }
-            while (AllEqual(pojemniknaskladowe, numberOfCells, iteratortablicy) == false)
+            while (!AllEqual(componentContainer.get(), numberOfCells, arrayIterator))
             {
-                iteratortablicy++;
+                arrayIterator++;
             }
-            pojemniknaskladowe[iteratortablicy] = NextPrimeNumber(pojemniknaskladowe[iteratortablicy]);
-            iteratortablicy++;
-            FillWithTwos(pojemniknaskladowe, numberOfCells, iteratortablicy); //na prawo od liczby która lvl up robi, zape³nia mi tablice dwójkami
+            componentContainer[arrayIterator] = NextPrimeNumber(componentContainer[arrayIterator]);
+            arrayIterator++;
+            FillWithTwos(componentContainer.get(), numberOfCells, arrayIterator);
         }
-        pierwszyraz = false;
+        firstTime = false;
         numberOfCells = 0;
 
-        if (pojemniknaskladowe[0] <= component)
+        if (componentContainer[0] <= component)
         {
-            if (CanBeDecomposed(numberToCheck, component, pojemniknaskladowe) == true)
+            if (CanBeDecomposed(numberToCheck, component, componentContainer.get()))
             {
-                tempspr -= component;
+                tempCheck -= component;
                 cout << component;
-                while (tempspr != 0)
+                while (tempCheck != 0)
                 {
-                    tempspr -= pojemniknaskladowe[ite];
-                    cout << "+" << pojemniknaskladowe[ite];
-                    ite++;
+                    tempCheck -= componentContainer[iterator];
+                    cout << "+" << componentContainer[iterator];
+                    iterator++;
                 }
                 cout << endl;
             }
         }
     }
 
-    delete[] pojemniknaskladowe;
 }
