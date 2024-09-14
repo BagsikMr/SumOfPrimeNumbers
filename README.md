@@ -20,22 +20,21 @@ Output:<br />
 7+5+2+2<br />
 7+7+2<br />
 <br />
-(Yea, the entire code is written in Polish...)
-	<br />
+
 ## Setup
 Just run sln and follow [Input Format](#input-format).
 
 ## Input Format
 The program expects input in the following format:
 ```cpp
-<ilelini>
-<liczba1> <maks1>
-<liczba2> <maks2>
+<numberOfCases>
+<number1> <max1>
+<number2> <max2>
 ...
 ```
-- `<ilelini>` represents the number of input lines.
-- `<liczba>` represents a number to be checked and decomposed into combinations.
-- `<maks>` represents the starting value for finding combinations.
+- `<numberOfCases>` represents the number of input lines.
+- `<number>` represents a number to be checked and decomposed into combinations.
+- `<max>` represents the starting value for finding combinations.
 
 ## Output Format
 The program outputs the combinations found for each input line. For example:
@@ -46,6 +45,3 @@ The program outputs the combinations found for each input line. For example:
 ```
 Each combination is displayed as a sum of numbers, separated by `+`, followed by a newline character.
 
-## TODO
--Translate the code into English.
--Change new and delete to smart pointers.
