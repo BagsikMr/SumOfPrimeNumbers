@@ -5,7 +5,6 @@
 * [Setup](#setup)
 * [Input Format](#input-format)
 * [Output Format](#output-format)
-* [TODO](#todo)
 
 ## General info
 This code is a C++ program that aims to find combinations of numbers that add up to a given input value. The program utilizes various functions and algorithms to calculate and display these combinations.<br />
