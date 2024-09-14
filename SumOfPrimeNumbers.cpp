@@ -2,18 +2,47 @@
 
 using namespace std;
 
-#define MAKS_ROZMIAR_TABLICY_DLA_BAJTA 128
-#define PIERWSZA_LICZBA_PIERWSZA 2
-//Notka dla mnie
-//FIX do naprawy
-//TEST/Y do usuniêcia,testowania
-//przerzuæ komendy na dó³ potem
+const int MAX_ARRAY_SIZE_FOR_BYTE = 128;
+const int FIRST_PRIME_NUMBER = 2;
 
-bool CzyDaSieRozbic(int sprawdzana, int skladnik, int* pns) //pns - pojemnik na skladniki
+bool CanBeDecomposed(int numberToCheck, int component, int* pns);
+bool IsPrimeNumber(int a);
+int NextPrimeNumber(int a);
+void FillWithTwos(int* array, int numberOfCells, int startFrom);
+bool AllEqual(int* array, int numberOfCells, int startFrom);
+void NumberOfCells(int* array, int* numberOfCells, int* value);
+void Decompose(int numberToCheck, int component);
+int main()
+{
+    int numberOfCases = 0, number, max;
+    cout << "Enter how many causes you want to consider\n";
+    cin >> numberOfCases;
+    for (int a = 0; a < numberOfCases; a++)
+    {
+        cout << "Enter a number\n";
+        cin >> number;
+        cout << "Enter the maximum prime number\n";
+        cin >> max;
+        if (IsPrimeNumber(max) == true)
+        {
+            if (number == max)
+            {
+                cout << max << endl;
+            }
+            else
+            {
+                Decompose(number, max);
+            }
+        }
+    }
+    return 0;
+}
+
+bool CanBeDecomposed(int numberToCheck, int component, int* pns) //pns - pojemnik na componenti
 {
     int ite = 0;
-    int tempspr = sprawdzana;
-    tempspr -= skladnik;
+    int tempspr = numberToCheck;
+    tempspr -= component;
     while (true)
     {
         tempspr -= pns[ite];
@@ -28,7 +57,7 @@ bool CzyDaSieRozbic(int sprawdzana, int skladnik, int* pns) //pns - pojemnik na 
         }
     }
 }
-bool CzyLiczbaPierwsza(int a)
+bool IsPrimeNumber(int a)
 {
     int ldz = 0;
     for (int i = a; i > 0; i--)
@@ -47,30 +76,30 @@ bool CzyLiczbaPierwsza(int a)
         return false;
     }
 }
-int NastepnaLiczbaP(int a)
+int NextPrimeNumber(int a)
 {
     a++;
-    while (CzyLiczbaPierwsza(a) == false)
+    while (IsPrimeNumber(a) == false)
     {
         a++;
     }
     return a;
 }
-void ZapelnienieDwojkami(int* tablica, int ilosckomorek, int odktorej)
+void FillWithTwos(int* array, int numberOfCells, int startFrom)
 {
-    for (int a = odktorej; a < ilosckomorek + 1; a++)
+    for (int a = startFrom; a < numberOfCells + 1; a++)
     {
-        tablica[a] = 2;
+        array[a] = 2;
     }
 }
-bool WszystkieRowne(int* tablica, int ilosckomorek, int odktorej)
+bool AllEqual(int* array, int numberOfCells, int startFrom)
 {
     int porownanie;
     bool wystapienie = false;
-    porownanie = tablica[odktorej];
-    for (int a = odktorej; a < ilosckomorek; a++)
+    porownanie = array[startFrom];
+    for (int a = startFrom; a < numberOfCells; a++)
     {
-        if (porownanie != tablica[a])
+        if (porownanie != array[a])
         {
             wystapienie = true;
         }
@@ -84,63 +113,63 @@ bool WszystkieRowne(int* tablica, int ilosckomorek, int odktorej)
         return true;
     }
 }
-void IleKomorek(int* tablica, int* ilosckomorek, int* wartosc)
+void NumberOfCells(int* array, int* numberOfCells, int* value)
 {
     int temp = 0;
-    while (*wartosc >= 0)
+    while (*value >= 0)
     {
-        *wartosc -= tablica[temp++];
-        if (*wartosc > 0)
+        *value -= array[temp++];
+        if (*value > 0)
         {
             temp++;
-            (*ilosckomorek)++;
+            (*numberOfCells)++;
         }
     }
 }
-void Rozbicie(int sprawdzana, int skladnik)
+void Decompose(int numberToCheck, int component)
 {
     int* pojemniknaskladowe; //do przechowywania zmiennych
-    int ilosckomorek = 0, ite = 0, tempspr, tempsprpjs, iteratortablicy = 0;
+    int numberOfCells = 0, ite = 0, tempspr, tempsprpjs, iteratortablicy = 0;
     bool pierwszyraz = true;
-    pojemniknaskladowe = new int[MAKS_ROZMIAR_TABLICY_DLA_BAJTA];
+    pojemniknaskladowe = new int[MAX_ARRAY_SIZE_FOR_BYTE];
 
-    for (int a = 0; a < MAKS_ROZMIAR_TABLICY_DLA_BAJTA; a++)
+    for (int a = 0; a < MAX_ARRAY_SIZE_FOR_BYTE; a++)
     {
-        pojemniknaskladowe[a] = PIERWSZA_LICZBA_PIERWSZA;
+        pojemniknaskladowe[a] = FIRST_PRIME_NUMBER;
     }
 
-    while (pojemniknaskladowe[0] <= skladnik)
+    while (pojemniknaskladowe[0] <= component)
     {
-        ilosckomorek = 0;
+        numberOfCells = 0;
         ite = 0;
-        tempspr = sprawdzana;
-        tempsprpjs = sprawdzana - skladnik;
+        tempspr = numberToCheck;
+        tempsprpjs = numberToCheck - component;
 
-        IleKomorek(pojemniknaskladowe, &ilosckomorek, &tempsprpjs);
+        NumberOfCells(pojemniknaskladowe, &numberOfCells, &tempsprpjs);
 
         if (pierwszyraz == false) //jeœli pierwszy element nie bêdzie zerem to reszta mi potrzebnych te¿ nie,
         {
-            if (ilosckomorek < iteratortablicy) //zabezpieczenie wyjœcia poza u¿yteczn¹ tablice
+            if (numberOfCells < iteratortablicy) //zabezpieczenie wyjœcia poza u¿yteczn¹ tablice
             {
                 iteratortablicy = 0;
             }
-            while (WszystkieRowne(pojemniknaskladowe, ilosckomorek, iteratortablicy) == false)
+            while (AllEqual(pojemniknaskladowe, numberOfCells, iteratortablicy) == false)
             {
                 iteratortablicy++;
             }
-            pojemniknaskladowe[iteratortablicy] = NastepnaLiczbaP(pojemniknaskladowe[iteratortablicy]);
+            pojemniknaskladowe[iteratortablicy] = NextPrimeNumber(pojemniknaskladowe[iteratortablicy]);
             iteratortablicy++;
-            ZapelnienieDwojkami(pojemniknaskladowe, ilosckomorek, iteratortablicy); //na prawo od liczby która lvl up robi, zape³nia mi tablice dwójkami
+            FillWithTwos(pojemniknaskladowe, numberOfCells, iteratortablicy); //na prawo od liczby która lvl up robi, zape³nia mi tablice dwójkami
         }
         pierwszyraz = false;
-        ilosckomorek = 0;
+        numberOfCells = 0;
 
-        if (pojemniknaskladowe[0] <= skladnik)
+        if (pojemniknaskladowe[0] <= component)
         {
-            if (CzyDaSieRozbic(sprawdzana, skladnik, pojemniknaskladowe) == true)
+            if (CanBeDecomposed(numberToCheck, component, pojemniknaskladowe) == true)
             {
-                tempspr -= skladnik;
-                cout << skladnik;
+                tempspr -= component;
+                cout << component;
                 while (tempspr != 0)
                 {
                     tempspr -= pojemniknaskladowe[ite];
@@ -153,26 +182,4 @@ void Rozbicie(int sprawdzana, int skladnik)
     }
 
     delete[] pojemniknaskladowe;
-}
-int main()
-{
-    int ilelini = 0, liczba, maks;
-    cin >> ilelini;
-    for (int a = 0; a < ilelini; a++)
-    {
-        cin >> liczba;
-        cin >> maks;
-        if (CzyLiczbaPierwsza(maks) == true)
-        {
-            if (liczba == maks)
-            {
-                cout << maks << endl;
-            }
-            else
-            {
-                Rozbicie(liczba, maks);
-            }
-        }
-    }
-    return 0;
 }
